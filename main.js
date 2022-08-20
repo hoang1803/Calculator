@@ -221,8 +221,7 @@ function fixExpression() {
             break;
 
         if (arr[i] == '%') {
-            arrInfx[j++] = '÷';
-            arrInfx[j++] = 100;
+            arrInfx[j++] = '%';
             continue;
         }
 
@@ -289,7 +288,7 @@ function fixExpression() {
 function priority(x) {
     if (x == '1+' || x == '1-' || x.length > 1 || x == '√')
         return 4;
-    if (x == '^' || x == '!' || x == 'E')
+    if (x == '^' || x == '!' || x == 'E' || x == '%')
         return 3;
     if (x == '÷' || x == '×')
         return 2;
