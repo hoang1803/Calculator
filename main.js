@@ -493,7 +493,11 @@ function undo() {
             }
         }
         else {
-            res = del(res, arr[curPoint].length);
+            if(arr[curPoint] == 'Ans')
+                res = del(res, arr[curPoint].length);
+            else
+                res = del(res, 1);
+
             arr[curPoint--] = '';
         }
     }
