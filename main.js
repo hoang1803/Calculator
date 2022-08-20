@@ -309,7 +309,7 @@ function equal() {
     }
     if (answer != Error) {
         let save = infixToPostfix(res);
-        // console.log(save);
+        console.log(save);
         let temp = new Stack();
         for (x of save) {
             if (typeof (x) == typeof (1))
