@@ -439,7 +439,7 @@ function equal() {
 
     answer = round(answer);
 
-    if (answer != Error)
+    if (!Number.isNaN(answer) && answer != Error)
         pre_ans = answer;
     else
         answer = "Error";
@@ -538,14 +538,19 @@ function factorial(n) {
 }
 
 function round(n) {
-    if (typeof (n) != typeof (1))
+    if (Number.isNaN(n))
         return n;
 
     if (n == Infinity)
         return n;
     let cur = +(Math.round(n + "e+11") + "e-11");
-    if (cur == NaN)
+    // console.log();
+    // console.log(typeof cur);
+    if (Number.isNaN(cur)) {
+        // console.log("ahihi");
         return n;
+    }
+
     return cur;
 }
 
@@ -581,9 +586,17 @@ function cos(angle) {
 }
 
 function tan(angle) {
+    let a = sin(angle);
+    let b = cos(angle);
     if (isDeg)
         angle = transferDegToRad(angle)
-    return Math.tan(angle);
+    if (-1e-14 <= a && a <= 1e-14)
+        a = 0;
+    if (-1e-14 <= b && b <= 1e-14) 
+        b = 0;
+    if (b == 0)
+        return Error;
+    return a / b;
 }
 
 function log(n) {
