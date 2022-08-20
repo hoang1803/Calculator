@@ -437,6 +437,8 @@ function equal() {
             answer = temp.getTop();
     }
 
+    answer = round(answer);
+
     if (answer != Error)
         pre_ans = answer;
     else
@@ -533,6 +535,16 @@ function factorial(n) {
     for (i = 2; i <= n; i++)
         res *= i;
     return res;
+}
+
+function round(n)
+{
+    if(typeof(n) != typeof(1))
+        return n;
+
+    if(n == Infinity)
+        return n;
+    return +(Math.round(n + "e+11") + "e-11");
 }
 
 function sqrt(n) {
