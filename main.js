@@ -99,7 +99,14 @@ for (let number of numbers) {
                 if (!isNaN(arr[curPoint]) || arr[curPoint] == '.')
                     arr[curPoint] += value;
                 else
+                {
+                    if(arr[curPoint] == '%' || arr[curPoint] == '!')
+                    {
+                        arr[++curPoint] = '×';
+                        save = '×' + value;
+                    }
                     arr[++curPoint] = value;
+                }
             }
         }
 
@@ -314,7 +321,7 @@ function equal() {
             if (typeof (x) == typeof (1))
                 temp.push(x);
             else {
-                if (x.length > 1 || x == '√' || x == '!') {
+                if (x.length > 1 || x == '√' || x == '!' || x == '%') {
                     if (temp.empty()) {
                         answer = Error;
                         // console.log(12);
@@ -330,6 +337,10 @@ function equal() {
                             cur = -cur;
                             break;
 
+                        case '%':
+                            cur = cur / 100;
+                            break ;
+                            
                         case 'log':
                             cur = log(cur);
                             break;
