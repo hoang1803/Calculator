@@ -494,11 +494,19 @@ function undo() {
         }
         else {
             if(arr[curPoint] == 'Ans')
+            {
                 res = del(res, arr[curPoint].length);
+                arr[curPoint--] = '';
+            }
             else
+            {
                 res = del(res, 1);
+                arr[curPoint] = del(arr[curPoint], 1);
+                if(arr[curPoint] == '')
+                    curPoint--;
+            }
 
-            arr[curPoint--] = '';
+            
         }
     }
     if (arr[0] == '') {
