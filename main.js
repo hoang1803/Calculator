@@ -537,14 +537,16 @@ function factorial(n) {
     return res;
 }
 
-function round(n)
-{
-    if(typeof(n) != typeof(1))
+function round(n) {
+    if (typeof (n) != typeof (1))
         return n;
 
-    if(n == Infinity)
+    if (n == Infinity)
         return n;
-    return +(Math.round(n + "e+11") + "e-11");
+    let cur = +(Math.round(n + "e+11") + "e-11");
+    if (cur == NaN)
+        return n;
+    return cur;
 }
 
 function sqrt(n) {
