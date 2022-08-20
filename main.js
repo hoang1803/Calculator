@@ -4,7 +4,8 @@
 let numbers = document.getElementsByClassName("btn");
 let result = document.getElementById("result");
 let pre_result = document.getElementById("pre-result");
-
+let Degree = document.getElementById("Deg");
+let Radian = document.getElementById("Rad");
 const PI = Math.PI;
 const e = Math.E;
 
@@ -17,6 +18,7 @@ let curPoint = 0;
 let printResult = true;
 
 result.innerHTML = '0';
+
 
 for (let number of numbers) {
     number.addEventListener("click", function () {
@@ -521,10 +523,14 @@ function undo() {
 }
 
 function changeToRad() {
+    Degree.style.color = "gray";
+    Radian.style.color = "black";
     isDeg = false;
 }
 
 function changeToDeg() {
+    Radian.style.color = "gray";
+    Degree.style.color = "black";
     isDeg = true;
 }
 
