@@ -14,7 +14,9 @@ let countBrackets = 0;
 let arr = new Array();
 let haveDot = new Array();
 let curPoint = 0;
+let printResult = true;
 
+result.innerHTML = '0';
 
 for (let number of numbers) {
     number.addEventListener("click", function () {
@@ -72,8 +74,7 @@ for (let number of numbers) {
                                 haveDot[curPoint] = true;
                             }
                             else {
-                                if (arr[curPoint] == '+' || arr[curPoint] == '-' || arr[curPoint] == '×' || arr[curPoint] == '÷' ||
-                                    arr[curPoint] == '^' || arr[curPoint] == '(') {
+                                if (arr[curPoint] == '+' || arr[curPoint] == '-' || arr[curPoint] == '×' || arr[curPoint] == '÷' || arr[curPoint] == '^' || arr[curPoint] == '(') {
                                     arr[++curPoint] = value;
                                     haveDot[curPoint] = true;
                                 }
@@ -98,10 +99,8 @@ for (let number of numbers) {
             else {
                 if (!isNaN(arr[curPoint]) || arr[curPoint] == '.')
                     arr[curPoint] += value;
-                else
-                {
-                    if(arr[curPoint] == '%' || arr[curPoint] == '!')
-                    {
+                else {
+                    if (arr[curPoint] == '%' || arr[curPoint] == '!') {
                         arr[++curPoint] = '×';
                         save = '×' + value;
                     }
@@ -110,7 +109,14 @@ for (let number of numbers) {
             }
         }
 
-        result.innerHTML += save;
+        if (printResult) {
+            if (save != '') {
+                result.innerHTML = save;
+                printResult = false;
+            }
+        }
+        else
+            result.innerHTML += save;
 
     })
 }
@@ -305,6 +311,10 @@ function priority(x) {
 }
 
 function equal() {
+    if(printResult)
+    {
+        return ;
+    }
     let res = fixExpression();
     let answer = 0;
     for (x of res) {
@@ -339,8 +349,8 @@ function equal() {
 
                         case '%':
                             cur = cur / 100;
-                            break ;
-                            
+                            break;
+
                         case 'log':
                             cur = log(cur);
                             break;
@@ -434,18 +444,19 @@ function equal() {
         answer = "Error";
     result.innerHTML = answer;
     pre_result.innerHTML = "Ans = " + pre_ans;
-
+    printResult = true;
     countBrackets = 0;
     arr = new Array();
     curPoint = 0;
-    arr[curPoint] = answer;
 }
 
 
 function clean() {
     countBrackets = 0;
-    pre_ans = result.innerHTML;
-    result.innerHTML = "";
+    if(result.innerHTML != "Error")
+        pre_ans = result.innerHTML;
+    result.innerHTML = '0';
+    pre_result.innerHTML = "Ans = " + pre_ans;
     arr = new Array();
     curPoint = 0;
 }
@@ -455,6 +466,11 @@ function del(res, i) {
 }
 
 function undo() {
+    if(printResult)
+    {
+        clean();
+        return ;
+    }
     let res = result.innerHTML;
     if (arr[curPoint] == '(')
         countBrackets--;
@@ -477,9 +493,13 @@ function undo() {
             }
         }
         else {
+            res = del(res, arr[curPoint].length);
             arr[curPoint--] = '';
-            res = del(res, 1);
         }
+    }
+    if (arr[0] == '') {
+        res = '0';
+        printResult = true;
     }
     result.innerHTML = res;
 }
