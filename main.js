@@ -311,9 +311,8 @@ function priority(x) {
 }
 
 function equal() {
-    if(printResult)
-    {
-        return ;
+    if (printResult) {
+        return;
     }
     let res = fixExpression();
     let answer = 0;
@@ -453,7 +452,7 @@ function equal() {
 
 function clean() {
     countBrackets = 0;
-    if(result.innerHTML != "Error")
+    if (result.innerHTML != "Error")
         pre_ans = result.innerHTML;
     result.innerHTML = '0';
     pre_result.innerHTML = "Ans = " + pre_ans;
@@ -466,18 +465,23 @@ function del(res, i) {
 }
 
 function undo() {
-    if(printResult)
-    {
+    if (printResult) {
         clean();
-        return ;
+        return;
     }
     let res = result.innerHTML;
     if (arr[curPoint] == '(')
         countBrackets--;
     if (arr[curPoint] == ')')
         countBrackets++;
-    if (curPoint == 0)
-        arr[0] = res = '';
+    if (curPoint == 0) {
+        if (!isNaN(arr[0]) && arr[0].length) {
+            res = del(res, 1);
+            arr[0] = del(arr[0], 1);
+        }
+        else
+            arr[0] = res = '';
+    }
     else {
         if (arr[curPoint] == '(') {
             if (arr[curPoint - 1].length > 1 || arr[curPoint - 1] == '√') {
@@ -493,20 +497,18 @@ function undo() {
             }
         }
         else {
-            if(arr[curPoint] == 'Ans')
-            {
+            if (arr[curPoint] == 'Ans') {
                 res = del(res, arr[curPoint].length);
                 arr[curPoint--] = '';
             }
-            else
-            {
+            else {
                 res = del(res, 1);
                 arr[curPoint] = del(arr[curPoint], 1);
-                if(arr[curPoint] == '')
+                if (arr[curPoint] == '')
                     curPoint--;
             }
 
-            
+
         }
     }
     if (arr[0] == '') {
