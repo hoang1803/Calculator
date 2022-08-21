@@ -302,7 +302,7 @@ function fixExpression() {
 
 function priority(x) {
     if (x == '1+' || x == '1-' || x.length > 1 || x == '√')
-        return 4;
+        return 3;
     if (x == '^' || x == '!' || x == 'E' || x == '%')
         return 3;
     if (x == '÷' || x == '×')
