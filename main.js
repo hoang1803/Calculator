@@ -19,6 +19,8 @@ let printResult = true;
 
 result.innerHTML = '0';
 
+AC_or_CE();
+
 
 for (let number of numbers) {
     number.addEventListener("click", function () {
@@ -68,63 +70,62 @@ for (let number of numbers) {
         }
         else if (value.length == 1) {
             if (isNaN(value)) {
-                if(value == 'E')
-                {
-                    if(arr[curPoint] == '' || isNaN(arr[curPoint]))
+                if (value == 'E') {
+                    if (arr[curPoint] == '' || isNaN(arr[curPoint]))
                         save = '';
                     else
                         arr[++curPoint] = save;
                 }
                 else
-                if (value == '÷' || value == '×' || value == '%' || value == '^' || value == '!' || value == '+' || value == '-') {
-                    if (value == '+' || value == '-') {
-                        if (arr[curPoint] == '+' || arr[curPoint] == '-')
-                            save = "";
-                        else {
-                            if (curPoint == 0 && arr[curPoint] == '')
-                                curPoint = -1;
-                            arr[++curPoint] = value;
-                        }
-                    }
-                    else {
-                        if (arr[curPoint] == ')' || (arr[curPoint] != '' && !isNaN(arr[curPoint])) || arr[curPoint] == '!' || arr[curPoint] == '.' || arr[curPoint] == 'π' || arr[curPoint] == 'e' || arr[curPoint] == '%' || arr[curPoint] == 'Ans')
-                            arr[++curPoint] = value;
-                        else
-                            save = '';
-                    }
-                }
-                else
-                    if (value == '.') {
-                        if (haveDot[curPoint] == true || arr[curPoint] == 'E') {
-                            save = "";
+                    if (value == '÷' || value == '×' || value == '%' || value == '^' || value == '!' || value == '+' || value == '-') {
+                        if (value == '+' || value == '-') {
+                            if (arr[curPoint] == '+' || arr[curPoint] == '-')
+                                save = "";
+                            else {
+                                if (curPoint == 0 && arr[curPoint] == '')
+                                    curPoint = -1;
+                                arr[++curPoint] = value;
+                            }
                         }
                         else {
-                            if (!isNaN(arr[curPoint])) {
-                                arr[curPoint] += '.';
-                                haveDot[curPoint] = true;
+                            if (arr[curPoint] == ')' || (arr[curPoint] != '' && !isNaN(arr[curPoint])) || arr[curPoint] == '!' || arr[curPoint] == '.' || arr[curPoint] == 'π' || arr[curPoint] == 'e' || arr[curPoint] == '%' || arr[curPoint] == 'Ans')
+                                arr[++curPoint] = value;
+                            else
+                                save = '';
+                        }
+                    }
+                    else
+                        if (value == '.') {
+                            if (haveDot[curPoint] == true || arr[curPoint] == 'E') {
+                                save = "";
                             }
                             else {
-                                if (arr[curPoint] == '+' || arr[curPoint] == '-' || arr[curPoint] == '×' || arr[curPoint] == '÷' || arr[curPoint] == '^' || arr[curPoint] == '(') {
-                                    arr[++curPoint] = value;
+                                if (!isNaN(arr[curPoint])) {
+                                    arr[curPoint] += '.';
                                     haveDot[curPoint] = true;
                                 }
                                 else {
-                                    save = "×.";
-                                    arr[++curPoint] = '×';
-                                    arr[++curPoint] = value;
-                                    haveDot[curPoint] = true;
+                                    if (arr[curPoint] == '+' || arr[curPoint] == '-' || arr[curPoint] == '×' || arr[curPoint] == '÷' || arr[curPoint] == '^' || arr[curPoint] == '(') {
+                                        arr[++curPoint] = value;
+                                        haveDot[curPoint] = true;
+                                    }
+                                    else {
+                                        save = "×.";
+                                        arr[++curPoint] = '×';
+                                        arr[++curPoint] = value;
+                                        haveDot[curPoint] = true;
 
+                                    }
                                 }
                             }
                         }
-                    }
-                    else if (arr[curPoint] != 'E') {
-                        if (curPoint == 0 && arr[curPoint] == "")
-                            curPoint = -1;
-                        arr[++curPoint] = value;
-                    }
-                    else
-                        save = '';
+                        else if (arr[curPoint] != 'E') {
+                            if (curPoint == 0 && arr[curPoint] == "")
+                                curPoint = -1;
+                            arr[++curPoint] = value;
+                        }
+                        else
+                            save = '';
             }
             else {
                 if (!isNaN(arr[curPoint]) || arr[curPoint] == '.')
@@ -147,6 +148,7 @@ for (let number of numbers) {
         }
         else
             result.innerHTML += save;
+        AC_or_CE();
 
     })
 }
@@ -255,6 +257,18 @@ function infixToPostfix(arrInfx) {
         save.pop();
     }
     return arrPtfx;
+}
+
+function AC_or_CE() {
+    let del = document.getElementById("Delete");
+    if (printResult) {
+        del.innerHTML = 'AC';
+        del.setAttribute('onclick', 'clean()');
+    }
+    else {
+        del.innerHTML = 'CE';
+        del.setAttribute('onclick', 'undo()');
+    }
 }
 
 function fixExpression() {
@@ -487,17 +501,20 @@ function equal() {
     countBrackets = 0;
     arr = new Array();
     curPoint = 0;
+    AC_or_CE();
 }
 
 
 function clean() {
+    printResult = true;
     countBrackets = 0;
-    if (result.innerHTML != "Error")
-        pre_ans = result.innerHTML;
+    // if (result.innerHTML != "Error")
+    //     pre_ans = result.innerHTML;
     result.innerHTML = '0';
     pre_result.innerHTML = "Ans = " + pre_ans;
     arr = new Array();
     curPoint = 0;
+    AC_or_CE();
 }
 
 function del(res, i) {
@@ -556,6 +573,7 @@ function undo() {
         printResult = true;
     }
     result.innerHTML = res;
+    AC_or_CE();
 }
 
 function changeToRad() {
