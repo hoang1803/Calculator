@@ -35,15 +35,24 @@ for (let number of numbers) {
             if (arr[curPoint] == 'E')
                 save = '';
             else {
-                if (curPoint == 0 && arr[curPoint] == "")
-                    curPoint = -1;
-                if (value == 'Ans')
-                    arr[++curPoint] = 'Ans';
-                else {
-                    arr[++curPoint] = del(value, 1);
+                if (value == '^(') {
+                    if (arr[curPoint] == '') {
+                        arr[curPoint] = '0';
+                    }
+                    arr[++curPoint] = '^';
                     arr[++curPoint] = '(';
                 }
+                else {
+                    if (curPoint == 0 && arr[curPoint] == "")
+                        curPoint = -1;
+                    if (value == 'Ans')
+                        arr[++curPoint] = 'Ans';
+                    else {
+                        arr[++curPoint] = del(value, 1);
+                        arr[++curPoint] = '(';
+                    }
 
+                }
             }
         }
         else if (value.length == 1) {
@@ -194,6 +203,7 @@ function infixToPostfix(arrInfx) {
     for (let i = 0; i < arrInfx.length; i++) {
         if (!isNaN(arrInfx[i])) {
             arrPtfx[j++] = arrInfx[i];
+            // console.log("d, " + arrInfx[i]);
         }
         else {
             if (arrInfx[i] == '(') {
@@ -213,6 +223,8 @@ function infixToPostfix(arrInfx) {
 
             while (!save.empty() && priority(save.getTop()) >= priority(arrInfx[i])) {
                 arrPtfx[j++] = save.getTop();
+                // console.log("ahihihi " + priority(save.getTop()) + " " + priority(arrInfx[i]));
+                // console.log("hihi " + save.getTop() + " " + arrInfx[i]);
                 save.pop();
             }
             save.push(arrInfx[i]);
@@ -301,9 +313,11 @@ function fixExpression() {
 }
 
 function priority(x) {
-    if (x == '1+' || x == '1-' || x.length > 1 || x == '√')
-        return 3;
+    if ((x.length > 1 || x == '√') && x != '1-' && x != '1+')
+        return 5;
     if (x == '^' || x == '!' || x == 'E' || x == '%')
+        return 4;
+    if (x == '1+' || x == '1-')
         return 3;
     if (x == '÷' || x == '×')
         return 2;
@@ -326,6 +340,7 @@ function equal() {
     }
     if (answer != Error) {
         let save = infixToPostfix(res);
+        // console.log(res);
         // console.log(save);
         let temp = new Stack();
         for (x of save) {
@@ -339,6 +354,7 @@ function equal() {
                         break;
                     }
                     let cur = temp.getTop();
+                    // console.log(x + " " + cur);
                     temp.pop();
                     switch (x) {
                         case '1+':
@@ -488,7 +504,7 @@ function undo() {
     }
     else {
         if (arr[curPoint] == '(') {
-            if (arr[curPoint - 1].length > 1 || arr[curPoint - 1] == '√') {
+            if (arr[curPoint - 1].length > 1 || arr[curPoint - 1] == '√' || arr[curPoint - 1] == '^') {
                 res = del(res, arr[curPoint - 1].length + 1);
                 arr[curPoint] = arr[curPoint - 1] = '';
                 curPoint -= 2;
@@ -582,24 +598,26 @@ function transferRadToDeg(angle) {
 function sin(angle) {
     if (isDeg)
         angle = transferDegToRad(angle);
-    return Math.sin(angle);
+    let temp = Math.sin(angle);
+    if(-1e-11 <= temp && temp <= 1e-11)
+        temp = 0;
+    return temp;
 }
 
 function cos(angle) {
     if (isDeg)
         angle = transferDegToRad(angle)
-    return Math.cos(angle);
+    let temp = Math.cos(angle);
+    if(-1e-11 <= temp && temp <= 1e-11)
+        temp = 0;
+    return temp;
 }
 
 function tan(angle) {
     let a = sin(angle);
-    let b = cos(angle);
+    let b = cos(angle); 
     if (isDeg)
         angle = transferDegToRad(angle)
-    if (-1e-14 <= a && a <= 1e-14)
-        a = 0;
-    if (-1e-14 <= b && b <= 1e-14) 
-        b = 0;
     if (b == 0)
         return Error;
     return a / b;
