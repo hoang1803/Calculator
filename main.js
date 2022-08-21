@@ -36,11 +36,22 @@ for (let number of numbers) {
                 save = '';
             else {
                 if (value == '^(') {
+
                     if (arr[curPoint] == '') {
                         arr[curPoint] = '0';
+                        arr[++curPoint] = '^';
+                        arr[++curPoint] = '(';
+                        save = '0' + value;
                     }
-                    arr[++curPoint] = '^';
-                    arr[++curPoint] = '(';
+                    else {
+                        if (!isNaN(arr[curPoint]) || arr[curPoint] == 'π' || arr[curPoint] == 'e') {
+                            arr[++curPoint] = '^';
+                            arr[++curPoint] = '(';
+                        }
+                        else
+                            save = '';
+                    }
+
                 }
                 else {
                     if (curPoint == 0 && arr[curPoint] == "")
@@ -57,6 +68,14 @@ for (let number of numbers) {
         }
         else if (value.length == 1) {
             if (isNaN(value)) {
+                if(value == 'E')
+                {
+                    if(arr[curPoint] == '' || isNaN(arr[curPoint]))
+                        save = '';
+                    else
+                        arr[++curPoint] = save;
+                }
+                else
                 if (value == '÷' || value == '×' || value == '%' || value == '^' || value == '!' || value == '+' || value == '-') {
                     if (value == '+' || value == '-') {
                         if (arr[curPoint] == '+' || arr[curPoint] == '-')
@@ -409,7 +428,7 @@ function equal() {
                     // console.log(9);
                     break;
                 }
-
+                // console.log(x + " " + temp.size());
                 let b = temp.getTop();
                 temp.pop();
                 let a = temp.getTop();
@@ -449,13 +468,14 @@ function equal() {
                 temp.push(ans);
             }
         }
-        if (temp.size() != 1)
+        if (temp.size() != 1 || answer == Error)
             answer = Error;
         else
             answer = temp.getTop();
     }
 
     answer = round(answer);
+    // console.log(answer);
 
     if (!Number.isNaN(answer) && answer != Error)
         pre_ans = answer;
@@ -599,7 +619,7 @@ function sin(angle) {
     if (isDeg)
         angle = transferDegToRad(angle);
     let temp = Math.sin(angle);
-    if(-1e-11 <= temp && temp <= 1e-11)
+    if (-1e-11 <= temp && temp <= 1e-11)
         temp = 0;
     return temp;
 }
@@ -608,14 +628,14 @@ function cos(angle) {
     if (isDeg)
         angle = transferDegToRad(angle)
     let temp = Math.cos(angle);
-    if(-1e-11 <= temp && temp <= 1e-11)
+    if (-1e-11 <= temp && temp <= 1e-11)
         temp = 0;
     return temp;
 }
 
 function tan(angle) {
     let a = sin(angle);
-    let b = cos(angle); 
+    let b = cos(angle);
     if (isDeg)
         angle = transferDegToRad(angle)
     if (b == 0)
