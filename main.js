@@ -16,143 +16,292 @@ let arr = new Array();
 let haveDot = new Array();
 let curPoint = 0;
 let printResult = true;
+let _isChange = 0;
 
+// InitLnv
+let idInLnv = new Array("sin/asin", "ln/e^", "cos/acos", "log/10^", "tan/atan", "√/^2", "Ans/Rnd", "^/^(1/");
+
+let innerHTMLLnv = new Array();
+for (i = 0; i < 8; i++) {
+    innerHTMLLnv[i] = new Array();
+    let position = idInLnv[i].indexOf('/');
+    innerHTMLLnv[i][0] = idInLnv[i].slice(0, position);
+    innerHTMLLnv[i][1] = idInLnv[i].slice(position + 1, idInLnv[i].length);
+}
+
+let valueLnv = new Array();
+for (i = 0; i < 8; i++) {
+    valueLnv[i] = new Array();
+    for (j = 0; j < 2; j++)
+        valueLnv[i][j] = innerHTMLLnv[i][j];
+    if (i < 5) {
+        for (j = 0; j < 2; j++)
+            valueLnv[i][j] += '(';
+    }
+    else {
+        if (i == 5 || i == 7)
+            valueLnv[i][0] += '(';
+    }
+}
 result.innerHTML = '0';
 
 AC_or_CE();
 
+function changeLnv(x) {
+    _isChange += x;
+    _isChange %= 2;
+
+    for (i = 0; i < 8; i++) {
+        let t = document.getElementById(idInLnv[i]);
+        t.innerHTML = innerHTMLLnv[i][_isChange];
+        t.value = valueLnv[i][_isChange];
+
+        if (i == 5) {
+            if (_isChange)
+                t.setAttribute("onclick", "");
+            else
+                t.setAttribute("onclick", "checkBrackets(1)");
+        }
+
+        if (i == 6) {
+            if (_isChange) {
+                t.setAttribute("onclick", "addARandomNumber()");
+                t.value = '';
+            }
+            else {
+                t.setAttribute("onclick", "");
+            }
+        }
+    }
+}
+
+function setElement(value) {
+    if (value == 'e^(') {
+        arr[++curPoint] = 'e';
+        arr[++curPoint] = '^';
+        arr[++curPoint] = '(';
+        return;
+    }
+
+    if (value == '^(1/') {
+        arr[++curPoint] = '^';
+        arr[++curPoint] = '(';
+        arr[++curPoint] = '1';
+        arr[++curPoint] = '/';
+        return;
+    }
+
+    if (value == '^2') {
+        arr[++curPoint] = '^';
+        arr[++curPoint] = '2';
+        return;
+    }
+
+    if (value == '10^') {
+        arr[++curPoint] = '10';
+        arr[++curPoint] = '^';
+    }
+
+    if (value == 'Ans' || value == 'Rnd') {
+        arr[++curPoint] = 'Ans';
+        return;
+    }
+
+    if (value.length > 1) {
+        arr[++curPoint] = del(value, 1);
+        arr[++curPoint] = '(';
+        return;
+    }
+
+    arr[++curPoint] = value;
+
+    return;
+}
 
 for (let number of numbers) {
     number.addEventListener("click", function () {
         let value = this.value;
         let save = value;
 
-
-        if (arr[curPoint] == undefined)
-            arr[curPoint] = "";
-        if (haveDot[curPoint] == undefined)
-            haveDot[curPoint] = false;
-
-        if (value.length > 1) {
-            if (arr[curPoint] == 'E')
-                save = '';
-            else {
-                if (value == '^(') {
-
-                    if (arr[curPoint] == '') {
-                        arr[curPoint] = '0';
-                        arr[++curPoint] = '^';
-                        arr[++curPoint] = '(';
-                        save = '0' + value;
-                    }
-                    else {
-                        if (!isNaN(arr[curPoint]) || arr[curPoint] == 'π' || arr[curPoint] == 'e') {
-                            arr[++curPoint] = '^';
-                            arr[++curPoint] = '(';
-                        }
-                        else
-                            save = '';
-                    }
-
-                }
-                else {
-                    if (curPoint == 0 && arr[curPoint] == "")
-                        curPoint = -1;
-                    if (value == 'Ans')
-                        arr[++curPoint] = 'Ans';
-                    else {
-                        arr[++curPoint] = del(value, 1);
-                        arr[++curPoint] = '(';
-                    }
-
-                }
-            }
+        if (value == 'lnv') {
+            changeLnv(1);
         }
-        else if (value.length == 1) {
-            if (isNaN(value)) {
-                if (value == 'E') {
-                    if (arr[curPoint] == '' || isNaN(arr[curPoint]))
-                        save = '';
-                    else
-                        arr[++curPoint] = save;
-                }
-                else
-                    if (value == '÷' || value == '×' || value == '%' || value == '^' || value == '!' || value == '+' || value == '-') {
-                        if (value == '+' || value == '-') {
-                            if (arr[curPoint] == '+' || arr[curPoint] == '-')
-                                save = "";
-                            else {
-                                if (curPoint == 0 && arr[curPoint] == '')
-                                    curPoint = -1;
-                                arr[++curPoint] = value;
-                            }
+        else {
+            if (arr[curPoint] == undefined)
+                arr[curPoint] = "";
+            if (haveDot[curPoint] == undefined)
+                haveDot[curPoint] = false;
+
+            if (value.length > 1) {
+                if (arr[curPoint] == 'E')
+                    save = '';
+                else {
+                    if (value == '^(' || value == '^(1/' || value == '^2') {
+
+                        if (arr[curPoint] == '') {
+                            arr[curPoint] = '0';
+                            setElement(value);
+                            save = '0' + value;
                         }
                         else {
-                            if (arr[curPoint] == ')' || (arr[curPoint] != '' && !isNaN(arr[curPoint])) || arr[curPoint] == '!' || arr[curPoint] == '.' || arr[curPoint] == 'π' || arr[curPoint] == 'e' || arr[curPoint] == '%' || arr[curPoint] == 'Ans')
-                                arr[++curPoint] = value;
+                            if (!isNaN(arr[curPoint]) || arr[curPoint] == 'π' || arr[curPoint] == 'e' || arr[curPoint] == 'Ans' || arr[curPoint] == 'Rnd' || arr[curPoint] == ')' || arr[curPoint] == '!' || arr[curPoint] == '%') {
+                                setElement(value);
+                            }
                             else
                                 save = '';
                         }
+
+                    }
+                    else {
+                        if (curPoint == 0 && arr[curPoint] == "") {
+                            curPoint = -1;
+                            setElement(value);
+                        }
+                        else {
+                            if (!isNaN(arr[curPoint]) || arr[curPoint] == 'π' || arr[curPoint] == 'e' || arr[curPoint] == 'Ans' || arr[curPoint] == 'Rnd' || arr[curPoint] == ')' || arr[curPoint] == '!' || arr[curPoint] == '%') {
+                                arr[++curPoint] = '×';
+                                save = '×' + save;
+                                setElement(value);
+                            }
+                            else
+                                setElement(value);
+                        }
+                    }
+                }
+            }
+            else if (value.length == 1) {
+                if (isNaN(value)) {
+                    if (value == 'E') {
+                        if (arr[curPoint] == '' || isNaN(arr[curPoint]))
+                            save = '';
+                        else
+                            setElement(value);
                     }
                     else
-                        if (value == '.') {
-                            if (haveDot[curPoint] == true || arr[curPoint] == 'E') {
-                                save = "";
+                        if (value == '÷' || value == '×' || value == '%' || value == '^' || value == '!' || value == '+' || value == '-') {
+                            if (value == '+' || value == '-') {
+                                if (arr[curPoint] == '+' || arr[curPoint] == '-')
+                                    save = "";
+                                else {
+                                    if (curPoint == 0 && arr[curPoint] == '')
+                                        curPoint = -1;
+                                    setElement(value);
+                                }
                             }
                             else {
-                                if (!isNaN(arr[curPoint])) {
-                                    arr[curPoint] += '.';
-                                    haveDot[curPoint] = true;
+                                if (arr[curPoint] == ')' || (arr[curPoint] != '' && !isNaN(arr[curPoint])) || arr[curPoint] == '!' || arr[curPoint] == '.' || arr[curPoint] == 'π' || arr[curPoint] == 'e' || arr[curPoint] == '%' || arr[curPoint] == 'Ans') {
+                                    // arr[++curPoint] = 
+                                    setElement(value);
+                                }
+                                else
+                                    save = '';
+                            }
+                        }
+                        else
+                            if (value == '.') {
+                                if (haveDot[curPoint] == true || arr[curPoint] == 'E') {
+                                    save = "";
                                 }
                                 else {
-                                    if (arr[curPoint] == '+' || arr[curPoint] == '-' || arr[curPoint] == '×' || arr[curPoint] == '÷' || arr[curPoint] == '^' || arr[curPoint] == '(') {
-                                        arr[++curPoint] = value;
+                                    if (!isNaN(arr[curPoint])) {
+                                        arr[curPoint] += '.';
                                         haveDot[curPoint] = true;
                                     }
                                     else {
-                                        save = "×.";
-                                        arr[++curPoint] = '×';
-                                        arr[++curPoint] = value;
-                                        haveDot[curPoint] = true;
+                                        if (arr[curPoint] == '+' || arr[curPoint] == '-' || arr[curPoint] == '×' || arr[curPoint] == '÷' || arr[curPoint] == '^' || arr[curPoint] == '(') {
+                                            setElement(value);
+                                            haveDot[curPoint] = true;
+                                        }
+                                        else {
+                                            save = "×.";
+                                            arr[++curPoint] = '×';
+                                            setElement(value);
+                                            haveDot[curPoint] = true;
 
+                                        }
                                     }
                                 }
                             }
-                        }
-                        else if (arr[curPoint] != 'E') {
-                            if (curPoint == 0 && arr[curPoint] == "")
-                                curPoint = -1;
-                            arr[++curPoint] = value;
-                        }
-                        else
-                            save = '';
-            }
-            else {
-                if (!isNaN(arr[curPoint]) || arr[curPoint] == '.')
-                    arr[curPoint] += value;
+                            else if (arr[curPoint] != 'E') {
+                                if (curPoint == 0 && arr[curPoint] == "") {
+                                    curPoint = -1;
+                                    arr[++curPoint] = value;
+                                }
+                                else {
+                                    if (!isNaN(arr[curPoint]) || arr[curPoint] == 'π' || arr[curPoint] == 'e' || arr[curPoint] == 'Ans' || arr[curPoint] == 'Rnd' || arr[curPoint] == ')' || arr[curPoint] == '!' || arr[curPoint] == '%' || haveDot[curPoint]) {
+                                        arr[++curPoint] = '×';
+                                        save = '×' + save;
+                                        setElement(value);
+                                    }
+                                    else
+                                        setElement(value);
+                                }
+                            }
+                            else
+                                save = '';
+                }
                 else {
-                    if (arr[curPoint] == '%' || arr[curPoint] == '!') {
-                        arr[++curPoint] = '×';
-                        save = '×' + value;
+                    if (!isNaN(arr[curPoint]) || arr[curPoint] == '.')
+                        arr[curPoint] += value;
+                    else {
+                        if (arr[curPoint] == '%' || arr[curPoint] == '!' || arr[curPoint] == 'π' || arr[curPoint] == 'e' || arr[curPoint] == 'Ans' || arr[curPoint] == ')') {
+                            arr[++curPoint] = '×';
+                            save = '×' + value;
+                        }
+                        arr[++curPoint] = value;
                     }
-                    arr[++curPoint] = value;
                 }
             }
-        }
 
-        if (printResult) {
-            if (save != '') {
-                result.innerHTML = save;
-                printResult = false;
+            if (printResult) {
+                if (save != '') {
+                    result.innerHTML = save;
+                    printResult = false;
+                }
             }
+            else
+                result.innerHTML += save;
+            if (save.length) {
+                _isChange = 0;
+                changeLnv(0);
+            }
+            AC_or_CE();
         }
-        else
-            result.innerHTML += save;
-        AC_or_CE();
 
     })
 }
+function addARandomNumber() // (0, 1)
+{
+    let value = "" + Math.random();
+    let save = value;
+    if (!isNaN(arr[curPoint]) || arr[curPoint] == '.') {
+        arr[curPoint] += value;
+        haveDot[curPoint] = value.includes('.');
+    }
+    else {
+        if (arr[curPoint] == '%' || arr[curPoint] == '!' || arr[curPoint] == 'π' || arr[curPoint] == 'e' || arr[curPoint] == 'Ans' || arr[curPoint] == ')' || haveDot[curPoint]) {
+            arr[++curPoint] = '×';
+            save = '×' + value;
+        }
+        arr[++curPoint] = value;
+        haveDot[curPoint] = value.includes('.');
+    }
 
+    if (printResult) {
+        if (save != '') {
+            result.innerHTML = save;
+            printResult = false;
+        }
+    }
+    else
+        result.innerHTML += save;
+
+    if (save.length) {
+        _isChange = 0;
+        changeLnv(0);
+    }
+    AC_or_CE();
+}
 function checkBrackets(n) {
     if (n == 1) {
         if (arr[curPoint] != 'E')
@@ -425,6 +574,18 @@ function equal() {
                             cur = tan(cur);
                             break;
 
+                        case 'asin':
+                            cur = arcsin(cur);
+                            break;
+
+                        case 'acos':
+                            cur = arccos(cur);
+                            break;
+
+                        case 'atan':
+                            cur = arctan(cur);
+                            break;
+
                         case '!':
                             cur = factorial(cur);
                             break;
@@ -500,6 +661,7 @@ function equal() {
     printResult = true;
     countBrackets = 0;
     arr = new Array();
+    haveDot = new Array();
     curPoint = 0;
     AC_or_CE();
 }
@@ -513,6 +675,7 @@ function clean() {
     result.innerHTML = '0';
     pre_result.innerHTML = "Ans = " + pre_ans;
     arr = new Array();
+    haveDot = new Array();
     curPoint = 0;
     AC_or_CE();
 }
@@ -531,6 +694,8 @@ function undo() {
         countBrackets--;
     if (arr[curPoint] == ')')
         countBrackets++;
+    if (arr[curPoint].at(arr[curPoint].length - 1) == '.')
+        haveDot[curPoint] = false;
     if (curPoint == 0) {
         if (!isNaN(arr[0]) && arr[0].length) {
             res = del(res, 1);
@@ -571,6 +736,7 @@ function undo() {
     if (arr[0] == '') {
         res = '0';
         printResult = true;
+        clean();
     }
     result.innerHTML = res;
     AC_or_CE();
@@ -629,7 +795,7 @@ function transferDegToRad(angle) {
 }
 
 function transferRadToDeg(angle) {
-    angle = angle / PI * 180;
+    angle = angle * 180 / PI;
     return angle;
 }
 
@@ -672,20 +838,20 @@ function ln(n) {
 function arcsin(x) {
     let angle = Math.asin(x);
     if (isDeg)
-        transferRadToDeg(angle);
+        angle = transferRadToDeg(angle);
     return angle;
 }
 
 function arccos(x) {
     let angle = Math.acos(x);
     if (isDeg)
-        transferRadToDeg(angle);
+        angle = transferRadToDeg(angle);
     return angle;
 }
 
 function arctan(x) {
     let angle = Math.atan(x);
     if (isDeg)
-        transferRadToDeg(angle);
+        angle = transferRadToDeg(angle);
     return angle;
 }

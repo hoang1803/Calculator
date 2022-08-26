@@ -17,7 +17,6 @@
 
         <div class="Calculator">
 
-            <!-- <button type="button" class="btn operation" onclick="clean()">AC</button> -->
             <button type="button" class="btn operation" onclick="changeToRad()" id="Rad">Rad</button>
             <button type="button" class="btn operation" onclick="changeToDeg()" id="Deg">Deg</button>
             <button type="button" class="btn operation" value="!">x!</button>
@@ -26,40 +25,44 @@
             <button type="button" class="btn operation" value="%">%</button>
             <button type="button" class="btn operation" onclick="undo()" id="Delete">CE</button>
 
-            <button type="button" class="btn operation">lnv</button>
-            <button type="button" class="btn operation" value="sin(" onclick="checkBrackets(1)">sin</button>
-            <button type="button" class="btn operation" value="ln(" onclick="checkBrackets(1)">ln</button>
+            <button type="button" class="btn operation" value="lnv">lnv</button>
+            <button type="button" class="btn operation" id="sin/asin" value="sin("
+                onclick="checkBrackets(1)">sin</button>
+            <button type="button" class="btn operation" id="ln/e^" value="ln(" onclick="checkBrackets(1)">ln</button>
             <button type="button" class="btn number" value="7">7</button>
             <button type="button" class="btn number" value="8">8</button>
             <button type="button" class="btn number" value="9">9</button>
             <button type="button" class="btn operation" value="÷">÷</button>
 
             <button type="button" class="btn operation" value="π">π</button>
-            <button type="button" class="btn operation" value="cos(" onclick="checkBrackets(1)">cos</button>
-            <button type="button" class="btn operation" value="log(" onclick="checkBrackets(1)">log</button>
+            <button type="button" class="btn operation" id="cos/acos" value="cos("
+                onclick="checkBrackets(1)">cos</button>
+            <button type="button" class="btn operation" id="log/10^" value="log("
+                onclick="checkBrackets(1)">log</button>
             <button type="button" class="btn number" value="4">4</button>
             <button type="button" class="btn number" value="5">5</button>
             <button type="button" class="btn number" value="6">6</button>
             <button type="button" class="btn operation" value="×">×</button>
 
             <button type="button" class="btn operation" value="e">e</button>
-            <button type="button" class="btn operation" value="tan(" onclick="checkBrackets(1)">tan</button>
-            <button type="button" class="btn operation" value="√(" onclick="checkBrackets(1)">√</button>
+            <button type="button" class="btn operation" id="tan/atan" value="tan("
+                onclick="checkBrackets(1)">tan</button>
+            <button type="button" class="btn operation" id="√/^2" value="√(" onclick="checkBrackets(1)">√</button>
             <button type="button" class="btn number" value="1">1</button>
             <button type="button" class="btn number" value="2">2</button>
             <button type="button" class="btn number" value="3">3</button>
             <button type="button" class="btn operation" value="-">-</button>
 
-            <button type="button" class="btn operation" value="Ans">Ans</button>
+            <button type="button" class="btn operation" id="Ans/Rnd" value="Ans">Ans</button>
             <button type="button" class="btn operation" value="E">EXP</button>
-            <button type="button" class="btn operation" value="^(" onclick="checkBrackets(1)">^</button>
+            <button type="button" class="btn operation" id="^/^(1/" value="^(" onclick="checkBrackets(1)">^</button>
             <button type="button" class="btn number" value="0">0</button>
             <button type="button" class="btn number" value=".">.</button>
             <button type="button" id="equal" class="btn operation" onclick="equal()">=</button>
             <button type="button" class="btn operation" value="+">+</button>
         </div>
 
-        
+
     </div>
 
 
