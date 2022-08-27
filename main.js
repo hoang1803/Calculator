@@ -758,8 +758,15 @@ function factorial(n) {
     var res = 1;
     if (n > 170)
         return Infinity;
-    for (i = 2; i <= n; i++)
-        res *= i;
+    
+    while(n > 0)
+    {
+        res *= n;
+        n--;
+    }
+    
+    if(n)
+        return Error;
     return res;
 }
 
