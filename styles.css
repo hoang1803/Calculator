@@ -30,10 +30,12 @@ button {
 }
 
 #result {
+    display: flex;
     font-family: 'Times New Roman', Times, serif;
     font-size: 80;
     width: 700px;
-    text-align: right;
+    /* text-align: right; */
+    justify-content: flex-end;
 }
 
 #pre-result {
@@ -41,5 +43,6 @@ button {
     font-size: 80;
     width: 700px;
     text-align: right;
+    /* justify-content: flex-end; */
     color: gray;
 }
